@@ -3,6 +3,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import Homepage from "./pages/homepage/homepage";
 import ShopPage from "./pages/shop/shop";
 import Header from "./components/header/header";
+import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up";
 import "./App.css";
 
 const HatsPage = (props) => {
@@ -26,6 +27,7 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Homepage />} />
+          <Route path="signin" element={<SignInAndSignUpPage />} />
           <Route path="shop/*">
             <Route index element={<ShopPage />} />
             <Route path="hats" element={<HatsPage />} />
