@@ -1,37 +1,36 @@
-import React from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
 import Homepage from "./pages/homepage/homepage";
 import ShopPage from "./pages/shop/shop";
 import Header from "./components/header/header";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up";
-import "./App.css";
+import { auth } from "./firebase/firebase.utils";
 
-const HatsPage = (props) => {
-  console.log(props);
+const App = () => {
+  const [state, setState] = useState({ currentUser: null });
+
+  useEffect(() => {
+    let unsubscribeFromAuth = null;
+    unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+      setState({ currentUser: user });
+      console.log(user);
+    });
+
+    return () => unsubscribeFromAuth();
+  }, []);
+
   return (
     <div>
-      <h1>HATS PAGE</h1>
-      <Link to="/">Return to Homepage</Link>
-    </div>
-  );
-};
-
-const WomensPage = () => {
-  return <h1>WOMENS SHOPPING PAGE</h1>;
-};
-
-function App() {
-  return (
-    <div>
-      <Header />
+      <Header currentUser={state.currentUser} />
       <Routes>
         <Route path="/">
           <Route index element={<Homepage />} />
-          <Route path="signin" element={<SignInAndSignUpPage />} />
+          <Route path="signIn" element={<SignInAndSignUpPage />} />
           <Route path="shop/*">
             <Route index element={<ShopPage />} />
-            <Route path="hats" element={<HatsPage />} />
-            <Route path="womens" element={<WomensPage />} />
+            {/* <Route path="hats" element={<HatsPage />} />
+            <Route path="womens" element={<WomensPage />} /> */}
           </Route>
         </Route>
         {/* <Route path="/hats" element={<HatsPage />} />
@@ -39,6 +38,6 @@ function App() {
       </Routes>
     </div>
   );
-}
+};
 
 export default App;
