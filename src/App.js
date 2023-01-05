@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { connect } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Homepage from "./pages/homepage/homepage";
 import ShopPage from "./pages/shop/shop";
 import Header from "./components/header/header";
@@ -37,7 +37,16 @@ const App = (props) => {
       <Routes>
         <Route path="/">
           <Route index element={<Homepage />} />
-          <Route path="signIn" element={<SignInAndSignUpPage />} />
+          <Route
+            path="signIn"
+            element={
+              props.currentUser ? (
+                <Navigate to="/" replace />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
           <Route path="shop/*">
             <Route index element={<ShopPage />} />
           </Route>
@@ -47,7 +56,11 @@ const App = (props) => {
   );
 };
 
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),
 });
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
